@@ -7,4 +7,5 @@ ASTEROID_SPAWN_RATE = 0.8  # seconds
 ASTEROID_MAX_RADIUS = ASTEROID_MIN_RADIUS * ASTEROID_KINDS
 
 PLAYER_RADIUS = 20 # size of players ship
-PLAYER_TURN_SPEED = 300 # angular velocity
+PLAYER_TURN_SPEED = 300 # angular speed
+PLAYER_SPEED = 200 # player movement speed
