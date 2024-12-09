@@ -30,10 +30,13 @@ def main():
         screen.fill("black", rect=None)
         # renders the player object to the screen
         player.draw(screen)
-        # refreshes the screen
-        pygame.display.flip()
         # limits the FPS for the game and updates the dt variable
         dt = clock.tick(60)/1000
+        # calls the player method to update player position
+        player.update(dt)
+        # refreshes the screen
+        pygame.display.flip()
+        
 
 if __name__ == "__main__":
     main()
