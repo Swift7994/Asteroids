@@ -1,7 +1,7 @@
 import pygame
 from constants import *
-from player import *
-from circleshape import *
+from player import Player
+from circleshape import CircleShape
 
 def main():
     # initialize pygame and set screen size
@@ -13,29 +13,35 @@ def main():
     print(f"Screen width: {SCREEN_WIDTH}")
     print(f"Screen height: {SCREEN_HEIGHT}")
 
-    # instantiate a Player object
-    player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
-    # create a clock object and set it to "clock" variable
-    clock = pygame.time.Clock()
-    # initialize a value "delta time", which stores the value the .tick() method returns
-    dt = 0
-    # infinite game loop
+    clock = pygame.time.Clock() # create a clock object
+    dt = 0 # Delta time (time between frames)
+
+    # Create sprite groups
+    updatable = pygame.sprite.Group()
+    drawable = pygame.sprite.Group()
+    Player.containers = (updatable, drawable) # Adds all instances of the Player class to both groups
+
+    player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2) # instantiate a Player object
+
+    # Game loop
     running = True
     while running:
         # checks if the user tries to exit the window
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                return
-        # fills the screen black (game background)
-        screen.fill("black", rect=None)
-        # renders the player object to the screen
-        player.draw(screen)
-        # limits the FPS for the game and updates the dt variable
-        dt = clock.tick(60)/1000
-        # calls the player method to update player position
-        player.update(dt)
-        # refreshes the screen
-        pygame.display.flip()
+                running = False
+
+        # Update and draw game objects
+        screen.fill("black", rect=None) # fills the screen black (game background)
+        for object in updatable:
+            object.update(dt) # updates game objects
+        for object in drawable:
+            object.draw(screen) # draws game objects
+
+        dt = clock.tick(60)/1000 # Limit FPS to 60 and calculate delta time
+        pygame.display.flip() # refreshes the screen
+
+    pygame.quit()
         
 
 if __name__ == "__main__":
