@@ -1,7 +1,8 @@
 import pygame
 from constants import *
 from player import Player
-from circleshape import CircleShape
+from asteroid import Asteroid
+from asteroidfield import AsteroidField
 
 def main():
     # initialize pygame and set screen size
@@ -19,9 +20,13 @@ def main():
     # Create sprite groups
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
+    asteroids = pygame.sprite.Group()
     Player.containers = (updatable, drawable) # Adds all instances of the Player class to both groups
+    Asteroid.containers = (updatable, drawable, asteroids)
+    AsteroidField.containers = (updatable)
 
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2) # instantiate a Player object
+    asteroids = AsteroidField()
 
     # Game loop
     running = True
