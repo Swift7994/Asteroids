@@ -1,14 +1,16 @@
 import pygame
-from circleshape import *
-from constants import PLAYER_RADIUS, PLAYER_TURN_SPEED, PLAYER_SPEED
+from circleshape import CircleShape
+from constants import PLAYER_RADIUS, PLAYER_TURN_SPEED, PLAYER_SPEED, PLAYER_SHOOT_SPEED
+from shot import Shot
 
 class Player(CircleShape):
     def __init__(self, x, y):
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
+        self.shoot_cooldown = 0
 
     def triangle(self): # the specifications for the player sprite
-        forward = pygame.Vector2(0, 1).rotate(self.rotation) # 
+        forward = pygame.Vector2(0, 1).rotate(self.rotation) 
         right = pygame.Vector2(0, 1).rotate(self.rotation + 90) * self.radius / 1.5
         a = self.position + forward * self.radius
         b = self.position - forward * self.radius - right
@@ -25,8 +27,14 @@ class Player(CircleShape):
         forward = pygame.Vector2(0, 1).rotate(self.rotation) # basic vector (0, 1) with direction determined by the rotation angle (direction player is facing)
         self.position += forward * PLAYER_SPEED * dt # magnitude of the vector modified, based on our predetermined constant
 
-    def update(self, dt): # calls on the player methods "move" and "rotate" when the assigned key is pressed
+    def shoot(self):
+        shot = Shot(self.position.x, self.position.y)
+        shot.velocity = pygame.Vector2(0, 1).rotate(self.rotation) * PLAYER_SHOOT_SPEED
+        self.shoot_cooldown = 0.3
+
+    def update(self, dt): # calls on the player methods "move", "rotate" and "shoot" when the assigned key is pressed
         keys = pygame.key.get_pressed()
+        self.shoot_cooldown -= dt
 
         if keys[pygame.K_a]:
             self.rotate(-dt)
@@ -36,3 +44,7 @@ class Player(CircleShape):
             self.move(dt)
         if keys[pygame.K_s]:
             self.move(-dt)
+        if keys[pygame.K_SPACE]:
+            if self.shoot_cooldown <= 0:
+                self.shoot()
+
